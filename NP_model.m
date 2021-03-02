@@ -304,9 +304,11 @@ I = calclight(param.z,t,P,param.dx,param.kp,param.kw,param.I0);
 ix_f = 1:n;
 
 mu = zeros;
-for i = 1:n
-    mu(i) = param.mu_max * min((N(i)/ (param.H_N + N(i))), (I(i)/ (param.H_I + I(i))));
-end
+% for i = 1:n
+%     mu(i) = param.mu_max * min((N(i)/ (param.H_N + N(i))), (I(i)/ (param.H_I + I(i))));
+% end
+
+mu(ix_f) = param.mu_max*min((N(ix_f)'./(param.H_N+N(ix_f)')),(I(ix_f)./(param.H_I+I(ix_f))));
 
 
 %--- Nutrients
