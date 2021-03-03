@@ -13,6 +13,8 @@ I0 = I0 * g1;
 I = I0.*(exp(-kw*z) .* exp(-int));
 I(1) = I0.*(exp(-kw.*z(1)) .* exp(-kp.*C(1).*dx));
 
+% I = I0*exp(-kw*z - kp*cumsum(C')*dx);
+
 end
 
 
