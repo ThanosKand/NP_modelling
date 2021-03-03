@@ -261,6 +261,32 @@ legend('Nutrients','Light', 'Location', 'southeast')
 title('t = 50 days')
 % ylabel( 'Depth [m]')
 
+%% Check steps
+figure;
+hold on 
+for nopoints_n = [350, 50]
+
+param.dx = L / nopoints_n; %[m]
+param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
+param.c0 = [ones(1, nopoints_n)*100 ones(1, nopoints_n)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
+
+
+[t, C] = NPZD(param);
+
+n = length(param.z);
+N = C(:, 1:n);
+P = C(:, n+1:2*n);
+    
+    
+plot(P(end,:), param.z, 'o-')
+axis ij
+end
+legend()
+xlabel('Concentration (X/m^3)')
+ylabel('Depth (m)')
+
+
+
 %%
 function [t, C] = NPZD(param)
 
@@ -304,11 +330,11 @@ I = calclight(param.z,t,P,param.dx,param.kp,param.kw,param.I0);
 ix_f = 1:n;
 
 mu = zeros;
-for i = 1:n
-    mu(i) = param.mu_max * min((N(i)/ (param.H_N + N(i))), (I(i)/ (param.H_I + I(i))));
-end
+% for i = 1:n
+%     mu(i) = param.mu_max * min((N(i)/ (param.H_N + N(i))), (I(i)/ (param.H_I + I(i))));
+% end
 
-% mu(ix_f) = param.mu_max*min((N(ix_f)'./(param.H_N+N(ix_f)')),(I(ix_f)./(param.H_I+I(ix_f))));
+mu(ix_f) = param.mu_max*min((N(ix_f)'./(param.H_N+N(ix_f)')),(I(ix_f)./(param.H_I+I(ix_f))));
 
 
 %--- Nutrients
