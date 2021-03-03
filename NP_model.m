@@ -4,7 +4,7 @@ param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
 param.t_range = 0:1000;
-nopoints = 100;
+nopoints = 500;
 param.dx = L / nopoints; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); 
 param.c0 = [ones(1, nopoints)*100 ones(1, nopoints)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
@@ -264,18 +264,18 @@ title('t = 50 days')
 %% Check steps
 figure;
 hold on 
-for nopoints_n = [350, 50]
+for nopoints_n = [400, 50]
 
 param.dx = L / nopoints_n; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
 param.c0 = [ones(1, nopoints_n)*100 ones(1, nopoints_n)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
 
 
-[t, C] = NPZD(param);
+[t2, C2] = NPZD(param);
 
 n = length(param.z);
-N = C(:, 1:n);
-P = C(:, n+1:2*n);
+N = C2(:, 1:n);
+P = C2(:, n+1:2*n);
     
     
 plot(P(end,:), param.z, 'o-')
