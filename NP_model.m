@@ -266,7 +266,7 @@ title('t = 50 days')
 %% Check steps
 figure;
 hold on 
-for nopoints_n = [250, 200, 40, 20]
+for nopoints_n = [250, 200, 40, 10]
 
 param.dx = L / nopoints_n; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
