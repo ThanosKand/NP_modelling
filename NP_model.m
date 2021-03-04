@@ -1,5 +1,5 @@
 % Data
-L = 200; % [m]
+L = 100; % [m]
 param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
@@ -266,7 +266,7 @@ title('t = 50 days')
 %% Check steps
 figure;
 hold on 
-for nopoints_n = [250, 200, 40, 10]
+for nopoints_n = [500, 25]
 
 param.dx = L / nopoints_n; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
@@ -280,7 +280,7 @@ N = C2(:, 1:n);
 P = C2(:, n+1:2*n);
     
     
-plot(P(end,:), param.z, 'o-')
+plot(P(end,:), param.z, '-', 'Linewidth', 1.5)
 axis ij
 end
 legend()
