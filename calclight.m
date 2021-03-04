@@ -6,8 +6,11 @@ for i = 2:length(z)
    
 end
 
+lat = 85;
+g1 = (1-0.8.*sin((pi.*lat)/180).*cos(2.*pi.*(t./365)));
 % g1 = (1-0.8.*sin((pi.*lat)/180).*cos(2.*pi.*(t./365)));
-g1 = 1+cos(2.*pi.*(t./365));
+% g1 = 1+cos(2.*pi.*(t./365));
+
 I0 = I0 * g1;
 
 I = I0.*(exp(-kw*z) .* exp(-int));
