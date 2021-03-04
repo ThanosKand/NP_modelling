@@ -1,10 +1,10 @@
 % Data
-L = 300; % [m]
+L = 200; % [m]
 param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
 param.t_range = 0:1000;
-nopoints = 500;
+nopoints = 50;
 param.dx = L / nopoints; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); 
 param.c0 = [ones(1, nopoints)*100 ones(1, nopoints)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
@@ -38,6 +38,8 @@ PP(i,:) = calclight(param.z,t1(i),P(i,:),param.dx,param.kp,param.kw,param.I0);
 
     end
 end
+
+
 %% Plot light in surface plot
 figure;
 hold on
@@ -264,7 +266,7 @@ title('t = 50 days')
 %% Check steps
 figure;
 hold on 
-for nopoints_n = [400, 50]
+for nopoints_n = [250, 200, 40, 20]
 
 param.dx = L / nopoints_n; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
@@ -282,7 +284,7 @@ plot(P(end,:), param.z, 'o-')
 axis ij
 end
 legend()
-xlabel('Concentration (X/m^3)')
+xlabel('Phytoplankton [cells/ m3]')
 ylabel('Depth (m)')
 
 
