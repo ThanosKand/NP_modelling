@@ -1,16 +1,16 @@
 % Data
-L = 100; % [m]
+L = 200; % [m]
 param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
 param.t_range = 0:1000;
-nopoints = 50;
+nopoints = 300;
 param.dx = L / nopoints; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); 
 param.c0 = [ones(1, nopoints)*100 ones(1, nopoints)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
 
 param.H_I = 20*86400; % [μmol photons m-2 day-1] half-saturation constant of light-limitead growth 
-param.H_N = 0.04; % [mmol nutrient/m3]
+param.H_N = 0.02; % [mmol nutrient/m3]
 
 param.I0 = 450*86400; %incident light intensity [μmol photons m-2 day-1]
 
@@ -266,7 +266,9 @@ title('t = 50 days')
 %% Check steps
 figure;
 hold on 
-for nopoints_n = [500, 25]
+tick = ['-', '--', ':', '-.'];
+i = 1;
+for nopoints_n = [300, 200, 100, 50]
 
 param.dx = L / nopoints_n; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
@@ -280,12 +282,122 @@ N = C2(:, 1:n);
 P = C2(:, n+1:2*n);
     
     
-plot(P(end,:), param.z, '-', 'Linewidth', 1.5)
+plot(P(end,:), param.z, 'Linewidth', 1.3)
 axis ij
+i = i + 1;
 end
-legend()
-xlabel('Phytoplankton [cells/ m3]')
-ylabel('Depth (m)')
+legend('dx = 0.66 m', 'dx = 1 m', 'dx = 2 m', 'dx = 4 m')
+xlabel('Phytoplankton conc. in steady state [cells/ m3]')
+ylabel('Depth [m]')
+
+%%
+fig10 = figure;
+subplot(2,1,1)
+hold on
+set(gca,'Ydir','reverse')
+surface(t1,param.z,P')
+shading interp
+colorbar
+xlabel('Time [days]');
+ylabel('Depth [m]');
+% xlim([0, max(param.t_range)])
+% title(['dz= ',num2str(param.dx)])
+title('Phytoplankton concentration [cells/ m3]')
+
+subplot(2,1,2)
+hold on
+plot(t1, P(:,:), '-', 'Linewidth', 1)
+% axis ij
+xlabel('Time [days]')
+ylabel('Phytopl. in each cell [cells/ m3]')
+
+% saveas(fig10,'double_4.jpg')
+
+
+
+
+%%
+figure
+hold on 
+i = 1;
+
+for nopoints_n = [300, 200, 100, 20]
+
+param.dx = L / nopoints_n; %[m]
+param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
+param.c0 = [ones(1, nopoints_n)*100 ones(1, nopoints_n)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
+    
+[t1, C] = NPZD(param);
+n = length(param.z);
+% N = C(:, 1:n);
+P = C(:, n+1:2*n);
+
+hold on
+subplot(2,2,i)
+plot(t1, P(:,:), '-', 'Linewidth', 1.1)
+axis ij
+i = i + 1;
+title(['dz= ',num2str(param.dx)])
+end
+% legend()
+xlabel('Time [days]')
+ylabel('Phytoplankton conc. in each cell [cells/ m3]')
+
+%% 
+
+u_new = [300, 200, 100, 50];
+% u_new = param.u*10;
+
+n = length(param.z);
+maxvalue = zeros;
+index = zeros;
+I_light = zeros(length(u_new), n);
+nutr_lm = zeros(length(u_new), n);
+light_lm = zeros(length(u_new), n);
+PP_last = zeros(length(u_new), n);
+
+% or hold on before the for loop !!!
+
+for i = 1:length(u_new)
+
+    
+param.dx = L / u_new(i); %[m]
+param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); % ASK !!! Why do we start from 0.5? Are we sure that we use the middle of each cell?
+param.c0 = [ones(1, u_new(i))*100 ones(1, u_new(i))*1e06]; % [mmol nutrient/m3] [cells/ m3] 
+    
+
+
+[t, C] = NPZD(param);
+N = C(:, 1:n);
+P = C(:, n+1:2*n);
+
+
+% plotting_2(N,P,param,t)
+
+
+P_last = P(end,:); 
+PP_last(i,:) = P_last;
+N_last = N(end,:);
+
+[maxvalue(i), index(i)] = max(P_last);
+
+end
+
+c = param.z(index);
+
+%%
+figure;
+
+subplot(1,2,1)
+plot(u_new, maxvalue,'-o', 'Linewidth', 1.5)
+xlabel('Settling velocity [m/day]')
+ylabel('Max [P] in steady state [cells/ m3] ')
+
+subplot(1,2,2)
+plot(u_new, c,'-ro', 'Linewidth', 1.5)
+xlabel('Settling velocity [m/day]')
+ylabel('Depth of max [P] in steady state [m]')
+axis ij
 
 
 
