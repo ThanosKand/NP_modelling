@@ -4,7 +4,7 @@ param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
 param.t_range = 0:1000;
-nopoints = 300;
+nopoints = 250;
 param.dx = L / nopoints; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); 
 param.c0 = [ones(1, nopoints)*100 ones(1, nopoints)*1e06]; % [mmol nutrient/m3] [cells/ m3] 
@@ -195,15 +195,43 @@ xlabel('t = 200 days')
 %% Plot light
 figure
 hold on
-plot(calclight(param.z,t1(1),P(1,:),param.dx,param.kp,param.kw,param.I0), param.z, 'Linewidth', 1.5)
-plot(calclight(param.z,t1(36),P(36,:),param.dx,param.kp,param.kw,param.I0), param.z, 'Linewidth', 1.5)
+% plot(calclight(param.z,t1(1),P(1,:),param.dx,param.kp,param.kw,param.I0), param.z, 'Linewidth', 1.5)
+% plot(calclight(param.z,t1(36),P(36,:),param.dx,param.kp,param.kw,param.I0), param.z, 'Linewidth', 1.5)
 plot(calclight(param.z,t1(end),P(end,:),param.dx,param.kp,param.kw,param.I0), param.z, 'Linewidth', 1.5)
 
 xlabel('Light intensity [μmol photons m-2 day-1]')
 ylabel( 'Depth [m]')
 axis ij
-legend('t = 0 days', 't = 36 days', 't = end')
-title('Light')
+legend( 't = 1000 days')
+% title('Light')
+%% Nutrients and Phytoplankton in steady state
+figure
+
+line(P(end,:), param.z, 'Linewidth', 1.5, 'Color', 'b')
+axis ij
+ax1 = gca; % current axes
+ax1.XColor = 'b';
+ax1.YColor = 'b';
+xlabel('Phytoplankton concentration [cells/ m3]')
+ylabel( 'Depth [m]')
+
+
+
+ax1_pos = ax1.Position; % position of first axes
+ax2 = axes('Position',ax1_pos,...
+    'XAxisLocation','top',...
+    'YAxisLocation','right',...
+    'Color','none');
+ax2.XColor = 'r';
+ax2.YColor = 'r';
+line(N(end,:), param.z, 'Parent', ax2, 'Linewidth', 1.2, 'Color','r', 'LineStyle', '--')
+axis ij
+xlabel('Concentration of nutrients [mmol nutrient/m3]')
+
+
+
+
+
 
 
 %%
