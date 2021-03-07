@@ -3,7 +3,7 @@ L = 200; % [m]
 param.D = 5*8.64; % [m^2/day]
 param.u = 0.04*24; % [m/day]
 
-param.t_range = 0:1000;
+param.t_range = 0:00;
 nopoints = 250;
 param.dx = L / nopoints; %[m]
 param.z = 0.5*param.dx:param.dx:(L-0.5*param.dx); 
@@ -258,15 +258,17 @@ hold on
 set(gca,'Ydir','reverse')
 surface(t1,param.z,PPP')
 shading interp
-colorbar
+% colorbar
 xlabel('Time [days]');
 ylabel('Depth [m]');
 % xlim([0, max(param.t_range)])
 title('Limiting factor')
+% legend()
+
 
 %%
 
-target_time = 596;
+target_time = 1000;
 
 figure;
 line(P(target_time,:), param.z, 'Linewidth', 1.5) % Half time
@@ -284,10 +286,10 @@ line(nutr_lm(target_time,:), param.z, 'Parent', ax2, 'Linewidth', 1.2, 'Color','
 axis ij
 line(light_lm(target_time,:), param.z, 'Parent', ax2, 'Linewidth', 1.2, 'Color','k', 'LineStyle', '-.')
 axis ij
-xlabel('Limitation by light or nutrients')
+xlabel('Growth limiting factor')
 
 
-legend('Nutrients','Light', 'Location', 'southeast')
+legend('Growth limiting factor with respect to nutrients','Growth limiting factor with respect to light', 'Location', 'southeast')
 title('t = 50 days')
 % ylabel( 'Depth [m]')
 
